@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(calculator LANGUAGES CXX)
+project(polinomi LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -37,29 +37,29 @@ else()
     set(GTEST_INCLUDE_DIR "${googletest_SOURCE_DIR}/googletest/include")
 endif()
 
-add_executable(calculator_tests
+add_executable(polinomi_test
         tests/main.cpp
         tests/test_pomidorki.cpp
 )
 
 if(GTEST_INCLUDE_DIR AND EXISTS "${GTEST_INCLUDE_DIR}")
     message(STATUS "Adding gtest include directory: ${GTEST_INCLUDE_DIR}")
-    target_include_directories(calculator_tests PRIVATE "${GTEST_INCLUDE_DIR}")
+    target_include_directories(polinomi_test PRIVATE "${GTEST_INCLUDE_DIR}")
 else()
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include")
-        target_include_directories(calculator_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include")
+        target_include_directories(polinomi_test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/googletest/googletest/include")
     elseif(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_deps/googletest-src/googletest/include")
-        target_include_directories(calculator_tests PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/_deps/googletest-src/googletest/include")
+        target_include_directories(polinomi_test PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/_deps/googletest-src/googletest/include")
     endif()
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_options(calculator_tests PRIVATE
+    target_compile_options(polinomi_test PRIVATE
             -fsanitize=address
             -fsanitize=undefined
             -fsanitize=leak
     )
-    target_link_libraries(calculator_tests PRIVATE
+    target_link_libraries(polinomi_test PRIVATE
             -fsanitize=address
             -fsanitize=undefined
             -fsanitize=leak
@@ -68,21 +68,21 @@ endif()
 
 if(TARGET ${GTEST_TARGET_MAIN})
     message(STATUS "Linking with ${GTEST_TARGET_MAIN}")
-    target_link_libraries(calculator_tests PRIVATE ${GTEST_TARGET_MAIN})
+    target_link_libraries(polinomi_test PRIVATE ${GTEST_TARGET_MAIN})
 elseif(TARGET ${GTEST_TARGET})
     message(STATUS "Linking with ${GTEST_TARGET}")
-    target_link_libraries(calculator_tests PRIVATE ${GTEST_TARGET})
+    target_link_libraries(polinomi_test PRIVATE ${GTEST_TARGET})
 else()
     message(FATAL_ERROR "gtest targets not found. Expected ${GTEST_TARGET_MAIN} or ${GTEST_TARGET}")
 endif()
 
 enable_testing()
-add_test(NAME CalculatorTests COMMAND calculator_tests)
+add_test(NAME polinomiTests COMMAND polinomi_test)
 
-option(BUILD_CALCULATOR "Build standalone calculator" OFF)
-if(BUILD_CALCULATOR)
-    add_executable(calculator
+option(BUILD_polinomi "Build standalone polinomi" OFF)
+if(BUILD_polinomi)
+    add_executable(polinomi
             tests/main.cpp
     )
-    target_include_directories(calculator PRIVATE src)
+    target_include_directories(polinomi PRIVATE src)
 endif()
